@@ -70,11 +70,11 @@ resource "kubernetes_deployment" "unstick" {
           }
           env {
             name  = "PORT"
-            value = "80"
+            value = "${var.port}"
           }
           env {
             name  = "BIND"
-            value = "0.0.0.0"
+            value = "${var.bind}"
           }
         }
       }

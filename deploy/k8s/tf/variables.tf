@@ -32,3 +32,13 @@ variable "redirect" {
   default     = ""
   description = "The name of the cookie to be deleted. Empty doesn't redirect."
 }
+
+variable "port" {
+  default     = "80"
+  description = "Port to listen on."
+}
+
+variable "bind" {
+  default     = "0.0.0.0"
+  description = "Address to bind to."
+}
