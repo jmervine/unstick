@@ -22,12 +22,16 @@ func main() {
 	}
 
 	act := func(w http.ResponseWriter, r *http.Request) {
-		var status int
 		var cookie, err = r.Cookie(c.CookieName)
+
+		respond := func(s int, o string) {
+			w.WriteHeader(s)
+			w.Write([]byte(o))
+			log.Println(o)
+		}
+
 		if err != nil {
-			status = http.StatusNotFound
-			w.WriteHeader(status)
-			w.Write([]byte(fmt.Sprintf("%d - %v: %s\n", status, err, c.CookieName)))
+			respond(http.StatusNotFound, fmt.Sprintf("%d - %v: %s\n", http.StatusNotFound, err, c.CookieName))
 			return
 		}
 
@@ -36,12 +40,11 @@ func main() {
 
 		if c.Redirect != "" {
 			http.Redirect(w, r, c.Redirect, http.StatusSeeOther)
+			log.Println("Redirecting to " + c.Redirect)
 			return
 		}
 
-		status = http.StatusOK
-		w.WriteHeader(status)
-		w.Write([]byte(fmt.Sprintf("%d - deleted: %s\n", status, c.CookieName)))
+		respond(http.StatusOK, fmt.Sprintf("%d - deleted: %s\n", http.StatusOK, c.CookieName))
 	}
 
 	http.HandleFunc("/unstick", act)
