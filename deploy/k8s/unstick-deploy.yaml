@@ -1,0 +1,35 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unstick
+  namespace: default
+  labels:
+    app: unstick
+spec:
+  selector:
+    matchLabels:
+      name: unstick
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: unstick
+    spec:
+      hostname: unstick
+      containers:
+      - name: unstick
+        image: jmervine/unstick:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        env:
+        - name: COOKIE_NAME
+          value: SESSION_AFFINITY
+          # Unset doesn't redirect.
+          # - name: REDIRECT
+          # - value: https://www.example.com/
+        - name: PORT
+          value: "80"
+        - name: BIND
+          value: "0.0.0.0"

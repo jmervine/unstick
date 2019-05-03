@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: unstick
+  namespace: default
+spec:
+  selector:
+    name: unstick
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+  clusterIP: None
