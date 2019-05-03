@@ -24,13 +24,17 @@ variable "version" {
 }
 
 variable "cookie_name" {
-  default     = "SESSION_AFFINITY"
-  description = "The name of the cookie to be deleted."
+  description = "Semicolon seperated list of cookies to be deleted."
 }
 
 variable "redirect" {
   default     = ""
   description = "The name of the cookie to be deleted. Empty doesn't redirect."
+}
+
+variable "use_ssl" {
+  default     = "false"
+  description = "Enable SSL support."
 }
 
 variable "port" {

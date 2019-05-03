@@ -25,10 +25,13 @@ spec:
         - containerPort: 80
         env:
         - name: COOKIE_NAME
-          value: SESSION_AFFINITY
+          value: cookieA;cookieB
           # Unset doesn't redirect.
           # - name: REDIRECT
           # - value: https://www.example.com/
+          # Unset doesn't use ssl
+          # - name: USE_SSL
+          # - value: "true"
         - name: PORT
           value: "80"
         - name: BIND

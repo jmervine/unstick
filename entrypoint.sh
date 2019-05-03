@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [ "$PORT" = "443" ] && test -z "$SERVER_KEY" && test -z "$SERVER_CRT"; then
+if [ "$USE_SSL" = "true" ] && test -z "$SERVER_KEY" && test -z "$SERVER_CRT"; then
   set -x
   export SERVER_KEY=/go/src/app/default_server.key
   export SERVER_CRT=/go/src/app/default_server.crt
