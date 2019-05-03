@@ -10,7 +10,7 @@ import (
 
 type configs struct {
 	CookieName string `env:"COOKIE_NAME,required"`
-	Redirect   string `env:"REDIRECT,default=/"`
+	Redirect   string `env:"REDIRECT"`
 	Port       string `env:"PORT,default=8000"`
 	Bind       string `env:"BIND,default=127.0.0.1"`
 }
@@ -34,12 +34,16 @@ func main() {
 		cookie.MaxAge = -1
 		http.SetCookie(w, cookie)
 
+		if c.Redirect != "" {
+			http.Redirect(w, r, c.Redirect, http.StatusSeeOther)
+			return
+		}
+
 		status = http.StatusOK
 		w.WriteHeader(status)
 		w.Write([]byte(fmt.Sprintf("%d - deleted: %s\n", status, c.CookieName)))
 	}
 
-	http.HandleFunc("/", act)
 	http.HandleFunc("/unstick", act)
 
 	l := fmt.Sprintf("%s:%s", c.Bind, c.Port)
