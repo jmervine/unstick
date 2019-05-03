@@ -18,11 +18,11 @@ resource "kubernetes_service" "unstick" {
   }
   spec {
     selector {
-      app = "unstick"
+      app = "${kubernetes_deployment.unstick.metadata.0.labels.app}"
     }
     port {
-      port        = 80
-      target_port = 80
+      port        = "${var.port}"
+      target_port = "${var.port}"
     }
     type       = "${var.service_type}"
     cluster_ip = "${var.service_cluster_ip}"
