@@ -12,12 +12,13 @@ resource "kubernetes_service" "unstick" {
     name      = "unstick"
     namespace = "${var.namespace}"
     labels {
+      app     = "unstick"
       managed = "Terraform"
     }
   }
   spec {
     selector {
-      app = "${kubernetes_pod.unstick.metadata.0.name}"
+      app = "unstick"
     }
     port {
       port        = 80
@@ -28,34 +29,54 @@ resource "kubernetes_service" "unstick" {
   }
 }
 
-resource "kubernetes_pod" "unstick" {
+resource "kubernetes_deployment" "unstick" {
   metadata {
     name      = "unstick"
     namespace = "${var.namespace}"
     labels {
+      app     = "unstick"
       managed = "Terraform"
     }
   }
 
   spec {
-    container {
-      image = "jmervine/unstick:${var.version}"
-      name  = "unstick"
-      env {
-        name  = "COOKIE_NAME"
-        value = "${var.cookie_name}"
+    replicas = 1
+
+    selector {
+      match_labels {
+        app = "unstick"
       }
-      env {
-        name  = "REDIRECT"
-        value = "${var.redirect}"
+    }
+
+    template {
+      metadata {
+        labels {
+          app     = "unstick"
+          managed = "Terraform"
+        }
       }
-      env {
-        name  = "PORT"
-        value = "80"
-      }
-      env {
-        name  = "BIND"
-        value = "0.0.0.0"
+
+      spec {
+        container {
+          image = "jmervine/unstick:${var.version}"
+          name  = "unstick"
+          env {
+            name  = "COOKIE_NAME"
+            value = "${var.cookie_name}"
+          }
+          env {
+            name  = "REDIRECT"
+            value = "${var.redirect}"
+          }
+          env {
+            name  = "PORT"
+            value = "80"
+          }
+          env {
+            name  = "BIND"
+            value = "0.0.0.0"
+          }
+        }
       }
     }
   }
