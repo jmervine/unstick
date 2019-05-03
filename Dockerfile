@@ -4,6 +4,7 @@ WORKDIR /go/src/app
 COPY . .
 
 ENV GO111MODULE on
+
 RUN make install
 
-ENTRYPOINT [ "unstick" ]
+ENTRYPOINT [ "/go/src/app/entrypoint.sh" ]

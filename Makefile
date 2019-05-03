@@ -1,5 +1,5 @@
 .PHONY: help
-VERSION ?= v0.0.2
+VERSION ?= v0.0.3
 
 help: ## Print out this help info
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'

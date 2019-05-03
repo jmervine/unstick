@@ -13,12 +13,23 @@ type configs struct {
 	Redirect   string `env:"REDIRECT"`
 	Port       string `env:"PORT,default=8000"`
 	Bind       string `env:"BIND,default=127.0.0.1"`
+	ServerKey  string `env:"SERVER_KEY"`
+	ServerCrt  string `env:"SERVER_CRT"`
+	Debug      bool   `env:"DEBUG,default=false"`
+}
+
+func (c *configs) useSSL() bool {
+	return c.Port == "443" && c.ServerKey != "" && c.ServerCrt != ""
 }
 
 func main() {
 	c := configs{}
 	if err := envdecode.Decode(&c); err != nil {
 		log.Fatal(err)
+	}
+
+	if c.Debug {
+		log.Printf("%+v\n", c)
 	}
 
 	act := func(w http.ResponseWriter, r *http.Request) {
@@ -51,5 +62,10 @@ func main() {
 
 	l := fmt.Sprintf("%s:%s", c.Bind, c.Port)
 	log.Printf("Listening on '%s', cookie=%s\n", l, c.CookieName)
-	log.Fatal(http.ListenAndServe(l, nil))
+
+	if c.useSSL() {
+		log.Fatal(http.ListenAndServeTLS(l, c.ServerCrt, c.ServerKey, nil))
+	} else {
+		log.Fatal(http.ListenAndServe(l, nil))
+	}
 }
